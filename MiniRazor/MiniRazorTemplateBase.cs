@@ -8,7 +8,7 @@ namespace MiniRazor
     /// <summary>
     /// Base template.
     /// </summary>
-    public abstract class MiniRazorTemplateBase
+    public abstract partial class MiniRazorTemplateBase
     {
         private readonly StringBuilder _buffer = new StringBuilder();
 
@@ -52,6 +52,10 @@ namespace MiniRazor
 
                 case RawString s:
                     WriteLiteral(s.Value);
+                    break;
+
+                case Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput t:
+                    WriteTagHelperOutput(t);
                     break;
 
                 default:

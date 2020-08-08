@@ -53,6 +53,7 @@ namespace MiniRazor
 
                         c.ClassName = typeName;
                     })
+                    .AddServices(_metadataReferencesLazy)
             );
 
             var sourceDocument = RazorSourceDocument.Create(
@@ -64,7 +65,7 @@ namespace MiniRazor
                 sourceDocument,
                 null,
                 Array.Empty<RazorSourceDocument>(),
-                Array.Empty<TagHelperDescriptor>()
+                null
             );
         }
 
@@ -149,10 +150,12 @@ namespace MiniRazor
                 .Select(n => n.TryLoad())
                 .Where(n => n != null);
 
-            return implicitAssemblies.Concat(dependencyAssemblies)
+            return implicitAssemblies.Concat(dependencyAssemblies).Concat(GetAdditionalAssemblyReferences())
                 .Distinct()
                 .Select(a => MetadataReference.CreateFromFile(a!.Location))
                 .ToArray();
         }
+
+        public static Func<IEnumerable<Assembly>> GetAdditionalAssemblyReferences = () => Array.Empty<Assembly>();
     }
 }
